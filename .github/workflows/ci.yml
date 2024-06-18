@@ -1,0 +1,16 @@
+on:
+  push:
+
+jobs:
+
+  spring:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4.1.7
+
+      - run: ./gradlew bootjar
+
+      - run: docker build .
+
+      - run: docker images
