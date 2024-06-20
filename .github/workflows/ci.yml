@@ -31,5 +31,5 @@ jobs:
 
       - run: docker images
 
-      - run: docker push ghcr.io/${{ GITHUB_REPOSITORY }}/spring-java17:latest
+      - run: docker push ghcr.io/${{ env.GITHUB_REPOSITORY }}/spring-java17:latest
 
