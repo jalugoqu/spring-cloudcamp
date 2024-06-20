@@ -1,3 +1,5 @@
+name: Build Docker Container
+
 on:
   push:
 
@@ -7,29 +9,33 @@ permissions:
 jobs:
 
   spring:
+    name: Build Spring Image
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v4.1.7
-      - run: java -version
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
-      - run: java -version
-      - run: |
+
+      - name: Build Microservice
+        run: |
           chmod +x gradlew 
           ./gradlew bootjar
 
-      - run: |
+      - name: Build Docker Container
+        run: |
           docker build -t spring-java17:latest .
           docker tag spring-java17:latest ghcr.io/${{ github.repository }}/spring-java17:latest
 
-      - env:
+      - name: Docker login
+        env:
           CR_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
 
-      - run: docker images
-
-      - run: docker push ghcr.io/${{ github.repository }}/spring-java17:latest
+      - name: Deploy Container to Registry
+        run: docker push ghcr.io/${{ github.repository }}/spring-java17:latest
 
