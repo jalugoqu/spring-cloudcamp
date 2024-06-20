@@ -1,6 +1,9 @@
 on:
   push:
 
+permissions:
+  packages: write
+
 jobs:
 
   spring:
@@ -18,6 +21,15 @@ jobs:
           chmod +x gradlew 
           ./gradlew bootjar
 
-      - run: docker build .
+      - run: |
+          docker build -t spring-java17:latest .
+          docker tag spring-java17:latest ghcr.io/${{ GITHUB_REPOSITORY }}/spring-java17:latest
+
+      - env:
+          CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+        run: echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
 
       - run: docker images
+
+      - run: docker push ghcr.io/${{ GITHUB_REPOSITORY }}/spring-java17:latest
+
