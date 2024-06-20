@@ -23,7 +23,7 @@ jobs:
 
       - run: |
           docker build -t spring-java17:latest .
-          docker tag spring-java17:latest ghcr.io/${{ env.GITHUB_REPOSITORY }}/spring-java17:latest
+          docker tag spring-java17:latest ghcr.io/${{ github.repository }}/spring-java17:latest
 
       - env:
           CR_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -31,5 +31,5 @@ jobs:
 
       - run: docker images
 
-      - run: docker push ghcr.io/${{ env.GITHUB_REPOSITORY }}/spring-java17:latest
+      - run: docker push ghcr.io/${{ github.repository }}/spring-java17:latest
 
