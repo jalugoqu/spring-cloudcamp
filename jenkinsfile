@@ -1,0 +1,25 @@
+node ("docker") {
+
+    stage ("checkout"){
+        checkout scm
+    }
+    stage ("check java version"){
+        sh "java -version"
+    }
+
+    stage ("execution permissions"){
+        sh "chmod +x gradlew"
+        sh "./gradlew task"
+    }
+
+    stage ("build jar"){
+        sh "./gradlew bootjar"
+
+    }
+    stage ("build dockerfile"){
+        sh "docker build -t spring-java17:latest ."
+        sh "docker tag spring-java17:latest ghcr.io/jalugoqu/spring-cloudcamp/spring-java17:latest"
+
+    }
+
+}
